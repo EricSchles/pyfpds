@@ -64,16 +64,16 @@ field_map = {
     'place_of_performance_country': 'POP_CONGRESS_COUNTRY',
     'place_of_performance_state': 'POP_STATE_NAME',
 
-    'vendor_city': 'VENDOR_ADDRESS_CITY',
-    'vendor_district': 'VENDOR_CONGRESS_DISTRICT_CODE',
-    'vendor_country_code': 'VENDOR_ADDRESS_COUNTRY_CODE',
-    'vendor_country_name': 'VENDOR_ADDRESS_COUNTRY_NAME',
-    'vendor_duns': 'VENDOR_DUNS_NUMBER',
-    'vendor_dba_name': 'VENDOR_DOING_BUSINESS_AS_NAME',
-    'vendor_name': 'VENDOR_NAME',
-    'vendor_state_code': 'VENDOR_ADDRESS_STATE_CODE',
-    'vendor_state_name': 'VENDOR_ADDRESS_STATE_NAME',
-    'vendor_zip': 'VENDOR_ADDRESS_ZIP_CODE',
+    'vendors_city': 'VENDOR_ADDRESS_CITY',
+    'vendors_district': 'VENDOR_CONGRESS_DISTRICT_CODE',
+    'vendors_country_code': 'VENDOR_ADDRESS_COUNTRY_CODE',
+    'vendors_country_name': 'VENDOR_ADDRESS_COUNTRY_NAME',
+    'vendors_duns': 'VENDOR_DUNS_NUMBER',
+    'vendors_dba_name': 'VENDOR_DOING_BUSINESS_AS_NAME',
+    'vendors_name': 'VENDOR_NAME',
+    'vendors_state_code': 'VENDOR_ADDRESS_STATE_CODE',
+    'vendors_state_name': 'VENDOR_ADDRESS_STATE_NAME',
+    'vendors_zip': 'VENDOR_ADDRESS_ZIP_CODE',
 
 }
 
@@ -82,6 +82,9 @@ boolean_map = {
     False: 'N',
 }
 
+
+def print_things(*args):
+    print(args)
 
 class Contracts():
     
@@ -94,17 +97,21 @@ class Contracts():
         if logger:
             self.log = logger 
         else:
-            self.log = print
+            self.log = print_things
 
     def pretty_print(self, data):
         self.log(json.dumps(data, indent=4))
 
 
     def convert_params(self, params):
-
+        
         new_params = {}
         for k,v in params.items():
-            new_params[field_map[k]] = v
+            try:
+                new_params[field_map[k]] = v
+            except:
+                import code
+                code.interact(local=locals())
         return new_params
 
     def combine_params(self, params):
@@ -127,7 +134,11 @@ class Contracts():
         while num_records == "all" or i < num_records:
             
             self.log("querying {0}{1}&start={2}".format(self.feed_url, params, i))
-            resp = requests.get(self.feed_url + params + '&start={0}'.format(i), timeout=60)
+            try:
+                resp = requests.get(self.feed_url + params + '&start={0}'.format(i), timeout=60)
+            except:
+                import code
+                code.interact(local=locals())
             self.query_url = resp.url
             self.log("finished querying {0}".format(resp.url))
             resp_data = xmltodict.parse(resp.text, process_namespaces=True, namespaces={'http://www.fpdsng.com/FPDS': None, 'http://www.w3.org/2005/Atom': None})
