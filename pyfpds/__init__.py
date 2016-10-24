@@ -110,8 +110,7 @@ class Contracts():
             try:
                 new_params[field_map[k]] = v
             except:
-                import code
-                code.interact(local=locals())
+                continue
         return new_params
 
     def combine_params(self, params):
