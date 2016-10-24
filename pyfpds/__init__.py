@@ -137,8 +137,7 @@ class Contracts():
             try:
                 resp = requests.get(self.feed_url + params + '&start={0}'.format(i), timeout=60)
             except:
-                import code
-                code.interact(local=locals())
+                continue
             self.query_url = resp.url
             self.log("finished querying {0}".format(resp.url))
             resp_data = xmltodict.parse(resp.text, process_namespaces=True, namespaces={'http://www.fpdsng.com/FPDS': None, 'http://www.w3.org/2005/Atom': None})
